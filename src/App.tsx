@@ -129,7 +129,9 @@ const App: React.FC = () => {
       
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-8 py-6 mix-blend-difference">
-        <div className="font-heading text-xl md:text-2xl font-bold tracking-tighter text-white cursor-default z-50">DIALEKTIKA</div>
+        <div className="font-heading text-xl md:text-2xl font-bold tracking-tighter text-white cursor-default z-50">
+          <img src="../src/assets/Logo.png" alt="Logo" className="w-24 h-24" />
+        </div>
         
         {/* Desktop Menu */}
         <div className="hidden md:flex gap-10 text-md font-bold tracking-widest uppercase">
