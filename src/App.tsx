@@ -17,51 +17,51 @@ import type { Artist } from '../types';
 const LINEUP: Artist[] = [
   { 
     id: '1', 
-    name: 'Neon Void', 
-    genre: 'Cyberpunk Synth', 
-    day: 'FRI 24', 
+    name: 'Neural Forge', 
+    genre: 'Generative AI', 
+    day: 'TRACK 01', 
     image: 'https://images.pexels.com/photos/26887007/pexels-photo-26887007.jpeg',
-    description: 'Architects of the audible abyss, weaving synth-heavy tapestries that explore the boundaries between digital and organic consciousness.'
+    description: 'We design and deploy large-scale generative AI systems — from fine-tuned LLMs to multimodal pipelines — that transform raw data into intelligent, production-ready products.'
   },
   { 
     id: '2', 
-    name: 'Data Mosh', 
-    genre: 'Glitch Hop', 
-    day: 'FRI 24', 
+    name: 'DataStream', 
+    genre: 'Data Engineering', 
+    day: 'TRACK 01', 
     image: 'https://images.unsplash.com/photo-1562408590-e32931084e23?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    description: 'Deconstructing the beat to rebuild it in high-definition chaos. Expect glitch textures, broken rhythms, and pure audio entropy.'
+    description: 'Real-time data pipelines, ETL architecture, and lakehouse design at enterprise scale. We turn noisy, fragmented data into a single source of truth your teams can act on.'
   },
   { 
     id: '3', 
-    name: 'Ether Real', 
-    genre: 'Ethereal Techno', 
-    day: 'SAT 25', 
+    name: 'CloudAxis', 
+    genre: 'Cloud Infrastructure', 
+    day: 'TRACK 02', 
     image: 'https://images.pexels.com/photos/6153741/pexels-photo-6153741.jpeg',
-    description: 'Techno from a dimension of pure light. Hypnotic loops and ethereal vocals that float above a foundation of industrial bass.'
+    description: 'Multi-cloud architecture, Kubernetes orchestration, and zero-downtime deployments. We build resilient infrastructure that scales with your ambition and shrinks your AWS bill.'
   },
   { 
     id: '4', 
-    name: 'Hyper Loop', 
-    genre: 'Drum & Bass', 
-    day: 'SAT 25', 
+    name: 'Cipher Lab', 
+    genre: 'Cybersecurity & DevSecOps', 
+    day: 'TRACK 02', 
     image: 'https://images.pexels.com/photos/14589883/pexels-photo-14589883.jpeg',
-    description: 'High-velocity drum & bass that accelerates the heartbeat to match the tempo of the city\'s neon pulse.'
+    description: 'Threat modelling, penetration testing, and shift-left security baked into every sprint. We harden your stack so your team ships fast without compromising on safety.'
   },
   { 
     id: '5', 
-    name: 'Digital Soul', 
-    genre: 'Deep House', 
-    day: 'SUN 26', 
+    name: 'Synapse UX', 
+    genre: 'Product & Design', 
+    day: 'TRACK 03', 
     image: 'https://images.pexels.com/photos/8380086/pexels-photo-8380086.jpeg',
-    description: 'Deep, resonant house music that finds the ghost in the machine, blending soulful samples with futuristic sound design.'
+    description: 'Human-centred design meets engineering precision. We craft interfaces that feel inevitable — from discovery workshops and wireframes to pixel-perfect, accessible frontends.'
   },
   { 
     id: '6', 
-    name: 'Void Walker', 
-    genre: 'Dark Ambient', 
-    day: 'SUN 26', 
+    name: 'Quantum Ops', 
+    genre: 'MLOps & Automation', 
+    day: 'TRACK 03', 
     image: 'https://images.unsplash.com/photo-1543906965-f9520aa2ed8a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    description: 'Ambient soundscapes for the end of the world. A contemplative journey through dark matter and silence.'
+    description: 'End-to-end ML lifecycle management — model registry, CI/CD for AI, drift detection, and automated retraining. We keep your models sharp long after launch day.'
   },
 ];
 
@@ -132,12 +132,12 @@ const App: React.FC = () => {
         <div className="font-heading text-xl md:text-2xl font-bold tracking-tighter text-white cursor-default z-50">DIALEKTIKA</div>
         
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-10 text-sm font-bold tracking-widest uppercase">
+        <div className="hidden md:flex gap-10 text-md font-bold tracking-widest uppercase">
           {['About', 'Services', 'Projects'].map((item) => (
             <button 
               key={item} 
               onClick={() => scrollToSection(item.toLowerCase())}
-              className="hover:text-[#a8fbd3] transition-colors text-white cursor-pointer bg-transparent border-none"
+              className="hover:text-[#a8fbd3] transition-colors text-slate-700 cursor-pointer bg-transparent border-none"
               data-hover="true"
             >
               {item}
@@ -145,7 +145,7 @@ const App: React.FC = () => {
           ))}
         </div>
         <button 
-          onClick={() => scrollToSection('tickets')}
+          onClick={() => scrollToSection('book a call')}
           className="hidden md:inline-block border border-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 text-white cursor-pointer bg-transparent"
           data-hover="true"
         >
@@ -170,7 +170,7 @@ const App: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-30 bg-[#31326f]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden"
           >
-            {['Lineup', 'Experience', 'Tickets'].map((item) => (
+            {['About', 'Services', 'Projects'].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
@@ -180,7 +180,7 @@ const App: React.FC = () => {
               </button>
             ))}
             <button 
-              onClick={() => scrollToSection('tickets')}
+              onClick={() => scrollToSection('book a call')}
               className="mt-8 border border-white px-10 py-4 text-sm font-bold tracking-widest uppercase bg-white text-black"
             >
               Services
@@ -199,7 +199,7 @@ const App: React.FC = () => {
           style={{ y, opacity }}
           className="z-10 text-center flex flex-col items-center w-full max-w-6xl pb-24 md:pb-20"
         >
-           {/* Date / Location */}
+           {/* Philosophy */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -268,13 +268,13 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* LINEUP SECTION */}
-      <section id="lineup" className="relative z-10 py-20 md:py-32">
+      {/* ABOUT SECTION */}
+      <section id="about" className="relative z-10 py-20 md:py-32">
         <div className="max-w-[1600px] mx-auto px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16 px-4">
              <h2 className="text-5xl md:text-8xl font-heading font-bold uppercase leading-[0.9] drop-shadow-lg break-words w-full md:w-auto">
-              Sonic <br/> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a8fbd3] to-[#4fb7b3]">Waves</span>
+              About <br/> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a8fbd3] to-[#4fb7b3]">Us</span>
             </h2>
           </div>
 
@@ -287,7 +287,7 @@ const App: React.FC = () => {
       </section>
 
       {/* EXPERIENCE SECTION */}
-      <section id="experience" className="relative z-10 py-20 md:py-32 bg-black/20 backdrop-blur-sm border-t border-white/10 overflow-hidden">
+      <section id="projects" className="relative z-10 py-20 md:py-32 bg-black/20 backdrop-blur-sm border-t border-white/10 overflow-hidden">
         {/* Decorative blurred circle - Optimized */}
         <div className="absolute top-1/2 right-[-20%] w-[50vw] h-[50vw] bg-[#4fb7b3]/20 rounded-full blur-[40px] pointer-events-none will-change-transform" style={{ transform: 'translateZ(0)' }} />
 
@@ -335,10 +335,10 @@ const App: React.FC = () => {
                 
                 <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
                   <div className="text-5xl md:text-8xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/0 opacity-50">
-                    04
+                    AI
                   </div>
                   <div className="text-lg md:text-xl font-bold tracking-widest uppercase mt-2 text-white">
-                    Interactive Zones
+                    AI Assistant
                   </div>
                 </div>
               </div>
@@ -347,23 +347,23 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* TICKETS SECTION */}
-      <section id="tickets" className="relative z-10 py-20 md:py-32 px-4 md:px-6 bg-black/30 backdrop-blur-lg">
+      {/* BOOK A CALL SECTION */}
+      <section id="services" className="relative z-10 py-20 md:py-32 px-4 md:px-6 bg-black/30 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-20">
              <h2 className="text-5xl md:text-9xl font-heading font-bold opacity-20 text-white">
-               ACCESS
+               SERVICES
              </h2>
              <p className="text-[#a8fbd3] font-mono uppercase tracking-widest -mt-3 md:-mt-8 relative z-10 text-sm md:text-base">
-               Secure your frequency
+               The Tech that you deserve
              </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { name: 'Web Dev', price: '$149', color: 'white', accent: 'bg-white/5' },
-              { name: 'Agentic AI', price: '$349', color: 'teal', accent: 'bg-[#4fb7b3]/10 border-[#4fb7b3]/50' },
-              { name: 'Consulting', price: '$899', color: 'periwinkle', accent: 'bg-[#637ab9]/10 border-[#637ab9]/50' },
+              { name: 'Starter', price: '$999/mo', color: 'white', accent: 'bg-white/5' },
+              { name: 'Growth', price: '$2,499/mo', color: 'teal', accent: 'bg-[#4fb7b3]/10 border-[#4fb7b3]/50' },
+              { name: 'Enterprise', price: 'Custom', color: 'periwinkle', accent: 'bg-[#637ab9]/10 border-[#637ab9]/50' },
             ].map((ticket, i) => {
               const isPurchasing = purchasingIndex === i;
               const isPurchased = purchasedIndex === i;
@@ -384,10 +384,12 @@ const App: React.FC = () => {
                       {ticket.price}
                     </div>
                     <ul className="space-y-4 md:space-y-6 text-sm text-gray-200">
-                      <li className="flex items-center gap-3"><Ticket className="w-5 h-5 text-gray-400" /> General Entry</li>
-                      <li className="flex items-center gap-3"><MapPin className="w-5 h-5 text-gray-400" /> All Stages</li>
-                      {i > 0 && <li className="flex items-center gap-3 text-white"><Zap className={`w-5 h-5 text-[#a8fbd3]`} /> Expedited Entry</li>}
-                      {i > 1 && <li className="flex items-center gap-3 text-white"><Globe className={`w-5 h-5 text-[#4fb7b3]`} /> Backstage Lounge</li>}
+                      <li className="flex items-center gap-3"><Zap className="w-5 h-5 text-gray-400" /> AI-powered web app</li>
+                      <li className="flex items-center gap-3"><Globe className="w-5 h-5 text-gray-400" /> Cloud deployment & hosting</li>
+                      {i > 0 && <li className="flex items-center gap-3 text-white"><Music className={`w-5 h-5 text-[#a8fbd3]`} /> Custom LLM integration</li>}
+                      {i > 0 && <li className="flex items-center gap-3 text-white"><Zap className={`w-5 h-5 text-[#a8fbd3]`} /> Dedicated MLOps pipeline</li>}
+                      {i > 1 && <li className="flex items-center gap-3 text-white"><MapPin className={`w-5 h-5 text-[#4fb7b3]`} /> On-site consulting & SLA</li>}
+                      {i > 1 && <li className="flex items-center gap-3 text-white"><Calendar className={`w-5 h-5 text-[#4fb7b3]`} /> 24/7 priority support</li>}
                     </ul>
                   </div>
                   
@@ -405,7 +407,7 @@ const App: React.FC = () => {
                       }`}
                   >
                     <span className="relative z-10">
-                      {isPurchasing ? 'Purchasing...' : isPurchased ? 'Purchased' : 'Purchase'}
+                       {isPurchasing ? 'Sending...' : isPurchased ? 'Request Sent ✓' : 'Book a Call'}
                     </span>
                     {/* Only show hover effect if actionable */}
                     {!isDisabled && !isPurchased && !isPurchasing && (
@@ -419,7 +421,7 @@ const App: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       className="text-xs text-center mt-3 text-white/40 font-mono"
                     >
-                      Demo site: no purchase was made
+                      We'll reach out within 24 hours to schedule your call.
                     </motion.p>
                   )}
                 </motion.div>
@@ -433,13 +435,63 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
           <div>
              <div className="font-heading text-3xl md:text-4xl font-bold tracking-tighter mb-4 text-white">DIALEKTIKA</div>
-             <div className="flex gap-2 text-xs font-mono text-gray-400">
-               <span>created for @xenophile</span>
+             <div className="flex gap-2 text-sm font-mono text-gray-400">
+               <span>contact us @info@dialektika.in</span>
              </div>
           </div>
           
-          <div className="flex gap-6 md:gap-8 flex-wrap">
-            <a href="https://euindiaconnect.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white font-bold uppercase text-xs tracking-widest transition-colors cursor-pointer" data-hover="true">
+          <div className="flex flex-col gap-2">
+            <motion.div
+              className="flex items-center gap-2"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {/* Pulsing globe icon */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                className="text-[#4fb7b3]"
+              >
+                <Globe className="w-3 h-3" />
+              </motion.div>
+
+              {/* Gradient shimmer text */}
+              <span
+                className="text-xs font-mono uppercase tracking-widest font-bold"
+                style={{
+                  background: 'linear-gradient(90deg, #a8fbd3, #4fb7b3, #637ab9, #a8fbd3)',
+                  backgroundSize: '200% auto',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'shimmer 3s linear infinite',
+                }}
+              >
+                Our Flagship Initiative
+              </span>
+
+              {/* Live blinking dot */}
+              <motion.span
+                className="w-1.5 h-1.5 rounded-full bg-[#a8fbd3] inline-block"
+                animate={{ opacity: [1, 0.2, 1] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            </motion.div>
+            <a
+              href="https://euindiaconnect.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold uppercase text-sm tracking-widest cursor-pointer"
+              data-hover="true"
+              style={{
+                background: 'linear-gradient(90deg, #003399, #6fa8dc, #ffffff, #FF9933, #FF6600)',
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                animation: 'shimmer 4s linear infinite',
+              }}
+            >
               EU India Connect
             </a>
           </div>

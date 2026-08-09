@@ -53,7 +53,7 @@ const CustomCursor: React.FC = () => {
       >
         {/* Text directly inside the scalable cursor body, centered by flex parent */}
         <motion.span 
-          className="z-10 text-black font-black uppercase tracking-widest text-sm overflow-hidden whitespace-nowrap"
+          className="z-10 text-black font-black uppercase tracking-widest text-xs overflow-hidden whitespace-nowrap mt-2"
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: isHovering ? 1 : 0,
