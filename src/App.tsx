@@ -513,7 +513,14 @@ const App: React.FC = () => {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-5xl bg-[#1a1b3b] border border-white/10 overflow-hidden flex flex-col md:flex-row shadow-2xl shadow-[#4fb7b3]/10 group/modal"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -50) navigateArtist('next');
+                if (info.offset.x > 50) navigateArtist('prev');
+              }}
+              className="relative w-full max-w-5xl max-h-[90vh] bg-[#1a1b3b] border border-white/10 overflow-y-auto overflow-x-hidden flex flex-col md:flex-row shadow-2xl shadow-[#4fb7b3]/10 group/modal"
             >
               {/* Close Button */}
               <button
@@ -527,7 +534,7 @@ const App: React.FC = () => {
               {/* Navigation Buttons */}
               <button
                 onClick={(e) => { e.stopPropagation(); navigateArtist('prev'); }}
-                className="absolute left-4 bottom-4 translate-y-0 md:top-1/2 md:bottom-auto md:-translate-y-1/2 z-20 p-3 rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors border border-white/10 backdrop-blur-sm"
+                className="absolute left-4 top-32 -translate-y-1/2 md:top-1/2 md:bottom-auto md:-translate-y-1/2 z-20 p-3 rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors border border-white/10 backdrop-blur-sm"
                 data-hover="true"
                 aria-label="Previous Artist"
               >
@@ -536,7 +543,7 @@ const App: React.FC = () => {
 
               <button
                 onClick={(e) => { e.stopPropagation(); navigateArtist('next'); }}
-                className="absolute right-4 bottom-4 translate-y-0 md:top-1/2 md:bottom-auto md:-translate-y-1/2 z-20 p-3 rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors border border-white/10 backdrop-blur-sm md:right-8"
+                className="absolute right-4 top-32 -translate-y-1/2 md:top-1/2 md:bottom-auto md:-translate-y-1/2 z-20 p-3 rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors border border-white/10 backdrop-blur-sm md:right-8"
                 data-hover="true"
                 aria-label="Next Artist"
               >
@@ -573,7 +580,7 @@ const App: React.FC = () => {
                      <span className="font-mono text-sm tracking-widest uppercase">{selectedArtist.day}</span>
                   </div>
                   
-                  <h3 className="text-4xl md:text-6xl font-heading font-bold uppercase leading-none mb-2 text-white">
+                  <h3 className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold uppercase leading-none mb-2 text-white break-words">
                     {selectedArtist.name}
                   </h3>
                   
