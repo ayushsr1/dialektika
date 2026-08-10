@@ -221,7 +221,7 @@ const App: React.FC = () => {
             <GradientText 
               text="DIALEKTIKA" 
               as="h1" 
-              className="text-[12vw] md:text-[11vw] leading-[0.9] font-black tracking-tighter text-center" 
+              className="text-[11vw] md:text-[10vw] leading-[0.9] font-black tracking-tighter text-center" 
             />
             {/* Optimized Orb - Reduced Blur for Performance */}
             <motion.div 
