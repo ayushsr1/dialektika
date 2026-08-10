@@ -12,6 +12,7 @@ import GradientText from './components/GlitchText';
 import CustomCursor from './components/CustomCursor';
 import ArtistCard from './components/ArtistCard';
 import type { Artist } from '../types';
+import Logo from './assets/Logo.png';
 
 // Dummy Data
 const LINEUP: Artist[] = [
@@ -130,7 +131,7 @@ const App: React.FC = () => {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-8 py-6 mix-blend-difference">
         <div className="font-heading text-xl md:text-2xl font-bold tracking-tighter text-white cursor-default z-50">
-          <img src="../src/assets/Logo.png" alt="Logo" className="w-24 h-24" />
+          <img src={Logo} alt="Logo" className="w-24 h-24" />
         </div>
         
         {/* Desktop Menu */}
