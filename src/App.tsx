@@ -72,29 +72,123 @@ const App: React.FC = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
-  
-  const [purchasingIndex, setPurchasingIndex] = useState<number | null>(null);
-  const [purchasedIndex, setPurchasedIndex] = useState<number | null>(null);
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('Custom');
+  const [contactStatus, setContactStatus] = useState<'idle' | 'sent'>('idle');
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    timeline: '',
+    preferredDate: '',
+    details: '',
+  });
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date());
 
   // Handle keyboard navigation for artist modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selectedArtist) return;
-      if (e.key === 'ArrowLeft') navigateArtist('prev');
-      if (e.key === 'ArrowRight') navigateArtist('next');
-      if (e.key === 'Escape') setSelectedArtist(null);
+      if (!selectedArtist && !isContactOpen) return;
+      if (e.key === 'ArrowLeft' && selectedArtist) navigateArtist('prev');
+      if (e.key === 'ArrowRight' && selectedArtist) navigateArtist('next');
+      if (e.key === 'Escape') {
+        if (selectedArtist) {
+          setSelectedArtist(null);
+        }
+        if (isContactOpen) {
+          closeContactModal();
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedArtist]);
+  }, [selectedArtist, isContactOpen]);
 
-  const handlePurchase = (index: number) => {
-    setPurchasingIndex(index);
-    setTimeout(() => {
-      setPurchasingIndex(null);
-      setPurchasedIndex(index);
-    }, 3500);
+  useEffect(() => {
+    document.body.style.overflow = isContactOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isContactOpen]);
+
+  const closeContactModal = () => {
+    setIsContactOpen(false);
+    setContactStatus('idle');
   };
+
+  const openContactModal = (plan: string) => {
+    setSelectedPlan(plan);
+    setContactStatus('idle');
+    setIsContactOpen(true);
+  };
+
+  const toDateInputValue = (date: Date) => {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const toggleDatePicker = () => {
+    setIsDatePickerOpen(prev => !prev);
+  };
+
+  const handleDateSelection = (value: string) => {
+    handleContactChange('preferredDate', value);
+    setIsDatePickerOpen(false);
+  };
+
+  const handleContactChange = (field: keyof typeof contactForm, value: string) => {
+    setContactForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleContactSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const subject = `Dialektika inquiry — ${selectedPlan}`;
+    const body = [
+      'Hi Dialektika,',
+      '',
+      `Name: ${contactForm.name}`,
+      `Email: ${contactForm.email}`,
+      `Company: ${contactForm.company || 'Not provided'}`,
+      `Preferred timeline: ${contactForm.timeline || 'To be discussed'}`,
+      `Preferred date: ${contactForm.preferredDate || 'To be discussed'}`,
+      '',
+      'Project details:',
+      contactForm.details || 'No additional details provided.',
+      '',
+      'Thanks!',
+    ].join('\n');
+
+    const mailtoLink = `mailto:ayushsr0@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
+    setContactStatus('sent');
+  };
+
+  useEffect(() => {
+    if (contactForm.preferredDate) {
+      const [year, month] = contactForm.preferredDate.split('-').map(Number);
+      setCalendarMonth(new Date(year, month - 1, 1));
+    }
+  }, [contactForm.preferredDate]);
+
+  const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+  const firstDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay();
+  const daysBeforeMonth = (firstDay + 6) % 7;
+  const totalCells = Math.ceil((daysBeforeMonth + daysInMonth) / 7) * 7;
+  const calendarDays = Array.from({ length: totalCells }, (_, index) => {
+    const dayOffset = index - daysBeforeMonth + 1;
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), dayOffset);
+    return {
+      key: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
+      date,
+      inCurrentMonth: date.getMonth() === calendarMonth.getMonth(),
+      value: toDateInputValue(date),
+    };
+  });
+  const todayValue = toDateInputValue(new Date());
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -148,7 +242,7 @@ const App: React.FC = () => {
           ))}
         </div>
         <button 
-          onClick={() => scrollToSection('book a call')}
+          onClick={() => openContactModal('Discovery Call')}
           className="hidden md:inline-block border border-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 text-white cursor-pointer bg-transparent"
           data-hover="true"
         >
@@ -183,10 +277,10 @@ const App: React.FC = () => {
               </button>
             ))}
             <button 
-              onClick={() => scrollToSection('book a call')}
+              onClick={() => openContactModal('Discovery Call')}
               className="mt-8 border border-white px-10 py-4 text-sm font-bold tracking-widest uppercase bg-white text-black"
             >
-              Services
+              Book a Call
             </button>
             
             <div className="absolute bottom-10 flex gap-6">
@@ -367,18 +461,13 @@ const App: React.FC = () => {
               { name: 'Starter', price: '$999/mo', color: 'white', accent: 'bg-white/5' },
               { name: 'Growth', price: '$2,499/mo', color: 'teal', accent: 'bg-[#4fb7b3]/10 border-[#4fb7b3]/50' },
               { name: 'Enterprise', price: 'Custom', color: 'periwinkle', accent: 'bg-[#637ab9]/10 border-[#637ab9]/50' },
-            ].map((ticket, i) => {
-              const isPurchasing = purchasingIndex === i;
-              const isPurchased = purchasedIndex === i;
-              const isDisabled = (purchasingIndex !== null) || (purchasedIndex !== null);
-
-              return (
-                <motion.div
-                  key={i}
-                  whileHover={isDisabled ? {} : { y: -20 }}
-                  className={`relative p-8 md:p-10 border border-white/10 backdrop-blur-md flex flex-col min-h-[450px] md:min-h-[550px] transition-colors duration-300 ${ticket.accent} ${isDisabled && !isPurchased ? 'opacity-50 grayscale' : ''} will-change-transform`}
-                  data-hover={!isDisabled}
-                >
+            ].map((ticket, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -20 }}
+                className={`relative p-8 md:p-10 border border-white/10 backdrop-blur-md flex flex-col min-h-[450px] md:min-h-[550px] transition-colors duration-300 ${ticket.accent} will-change-transform`}
+                data-hover="true"
+              >
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   
                   <div className="flex-1">
@@ -397,49 +486,189 @@ const App: React.FC = () => {
                   </div>
                   
                   <button 
-                    onClick={() => handlePurchase(i)}
-                    disabled={isDisabled}
-                    className={`w-full py-4 text-sm font-bold uppercase tracking-[0.2em] border border-white/20 transition-all duration-300 mt-8 group overflow-hidden relative 
-                      ${isPurchased 
-                        ? 'bg-[#a8fbd3] text-black border-[#a8fbd3] cursor-default' 
-                        : isPurchasing 
-                          ? 'bg-white/20 text-white cursor-wait'
-                          : isDisabled 
-                            ? 'cursor-not-allowed opacity-50' 
-                            : 'text-white cursor-pointer hover:bg-white hover:text-black'
-                      }`}
+                    onClick={() => openContactModal(ticket.name)}
+                    className="w-full py-4 text-sm font-bold uppercase tracking-[0.2em] border border-white/20 transition-all duration-300 mt-8 group overflow-hidden relative text-white cursor-pointer hover:bg-white hover:text-black"
                   >
-                    <span className="relative z-10">
-                       {isPurchasing ? 'Sending...' : isPurchased ? 'Request Sent ✓' : 'Book a Call'}
-                    </span>
-                    {/* Only show hover effect if actionable */}
-                    {!isDisabled && !isPurchased && !isPurchasing && (
-                      <div className="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out -z-0" />
-                    )}
+                    <span className="relative z-10">Book a Call</span>
+                    <div className="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out -z-0" />
                   </button>
-                  
-                  {isPurchased && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-xs text-center mt-3 text-white/40 font-mono"
-                    >
-                      We'll reach out within 24 hours to schedule your call.
-                    </motion.p>
-                  )}
+
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-xs text-center mt-3 text-white/40 font-mono"
+                  >
+                    We&apos;ll open your email app with a prefilled request.
+                  </motion.p>
                 </motion.div>
-              );
-            })}
+              ))}
           </div>
         </div>
       </section>
+
+      <AnimatePresence>
+        {isContactOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeContactModal}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm px-3 py-4 sm:px-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              onClick={(event) => event.stopPropagation()}
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#0f172a]/95 p-4 sm:p-6 md:p-8 shadow-2xl"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.3em] text-[#a8fbd3]">Book a call</p>
+                  <h3 className="text-3xl md:text-4xl font-heading font-bold mt-2">Tell us about your idea</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={closeContactModal}
+                  className="rounded-full border border-white/20 p-2 text-white/70 transition-colors hover:text-white"
+                  aria-label="Close contact form"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* <p className="mt-4 text-sm text-gray-300">
+                We&apos;ll open your email app with a prefilled request for info@dialektika.in.
+              </p> */}
+
+              {contactStatus === 'sent' ? (
+                <div className="mt-6 rounded-2xl border border-[#a8fbd3]/40 bg-[#a8fbd3]/10 p-4 text-sm text-[#a8fbd3]">
+                  Your draft is ready. Send it from your email app and we&apos;ll reach out shortly.
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-gray-200">Selected plan</label>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-[#a8fbd3]">
+                      {selectedPlan}
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="name" className="mb-2 block text-sm font-medium text-gray-200">Name</label>
+                    <input id="name" required value={contactForm.name} onChange={(event) => handleContactChange('name', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none ring-0 placeholder:text-gray-400" placeholder="Your name" />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-200">Email</label>
+                    <input id="email" type="email" required value={contactForm.email} onChange={(event) => handleContactChange('email', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none ring-0 placeholder:text-gray-400" placeholder="you@company.com" />
+                  </div>
+                  <div>
+                    <label htmlFor="company" className="mb-2 block text-sm font-medium text-gray-200">Company</label>
+                    <input id="company" value={contactForm.company} onChange={(event) => handleContactChange('company', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none ring-0 placeholder:text-gray-400" placeholder="Optional" />
+                  </div>
+                  <div>
+                    <label htmlFor="preferredDate" className="mb-2 block text-sm font-medium text-gray-200">Preferred date</label>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={toggleDatePicker}
+                        className="flex min-h-[48px] w-full cursor-pointer items-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white"
+                      >
+                        <span className={`flex-1 ${contactForm.preferredDate ? 'text-white' : 'text-gray-400'}`}>
+                          {contactForm.preferredDate
+                            ? new Date(`${contactForm.preferredDate}T00:00:00`).toLocaleDateString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })
+                            : 'Pick a date'}
+                        </span>
+                        <Calendar className="ml-3 h-4 w-4 shrink-0 text-[#a8fbd3]" />
+                      </button>
+
+                      {isDatePickerOpen && (
+                        <div className="absolute z-10 mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/95 p-3 shadow-2xl">
+                          <div className="mb-3 flex items-center justify-between">
+                            <button
+                              type="button"
+                              onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))}
+                              className="rounded-full p-1 text-gray-300 hover:bg-white/10"
+                              aria-label="Previous month"
+                            >
+                              <ChevronLeft className="h-4 w-4" />
+                            </button>
+                            <span className="text-sm font-semibold text-white">
+                              {calendarMonth.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))}
+                              className="rounded-full p-1 text-gray-300 hover:bg-white/10"
+                              aria-label="Next month"
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </button>
+                          </div>
+
+                          <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[11px] uppercase tracking-[0.2em] text-gray-400">
+                            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+                              <span key={day}>{day}</span>
+                            ))}
+                          </div>
+
+                          <div className="grid grid-cols-7 gap-1">
+                            {calendarDays.map(({ key, date, inCurrentMonth, value }) => {
+                              const isSelected = contactForm.preferredDate === value;
+                              const isToday = value === todayValue;
+                              return (
+                                <button
+                                  key={key}
+                                  type="button"
+                                  onClick={() => handleDateSelection(value)}
+                                  className={`h-8 rounded-full text-sm transition-colors ${
+                                    !inCurrentMonth
+                                      ? 'text-gray-500 hover:text-gray-300'
+                                      : 'text-white hover:bg-white/10'
+                                  } ${isSelected ? 'bg-[#a8fbd3] text-black' : ''} ${isToday && !isSelected ? 'ring-1 ring-[#4fb7b3]' : ''}`}
+                                >
+                                  {date.getDate()}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label htmlFor="details" className="mb-2 block text-sm font-medium text-gray-200">What are you building?</label>
+                    <textarea id="details" required rows={5} value={contactForm.details} onChange={(event) => handleContactChange('details', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none ring-0 placeholder:text-gray-400" placeholder="Tell us about the product, goals, and what you need help with." />
+                  </div>
+                  <div className="md:col-span-2">
+                    <button type="submit" className="w-full rounded-2xl border border-[#a8fbd3]/40 bg-[#a8fbd3] px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-black transition-colors hover:bg-[#8fe8c2]">
+                      Send request
+                    </button>
+                  </div>
+                </form>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <footer className="relative z-10 border-t border-white/10 py-12 md:py-16 bg-black/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
           <div>
              <div className="font-heading text-3xl md:text-4xl font-bold tracking-tighter mb-4 text-white">DIALEKTIKA</div>
              <div className="flex gap-2 text-sm font-mono text-gray-400">
-               <span>contact us @info@dialektika.in</span>
+             <span> contact us </span>
+             <a
+               href="info@dialektika.in"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="transition-colors hover:text-[#a8fbd3]"               
+             >
+               <span>info@dialektika.in</span>
+             </a>
              </div>
           </div>
           
